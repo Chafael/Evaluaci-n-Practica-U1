@@ -1,11 +1,9 @@
 import { Pool } from 'pg';
 
-// verificamos que exista la variable de entorno
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL no está definida en .env');
 }
 
-// pool de conexion a postgres
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   max: 20,
@@ -13,13 +11,11 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
-// si hay error en el pool lo mostramos
 pool.on('error', (_err) => {
   console.error('Error en la conexion');
   process.exit(-1);
 });
 
-// funcion para hacer queries a la base de datos
 export async function query<T>(text: string, params?: unknown[]): Promise<T[]> {
   const start = Date.now();
   try {
@@ -35,13 +31,11 @@ export async function query<T>(text: string, params?: unknown[]): Promise<T[]> {
   }
 }
 
-// para usar transacciones
 export async function getClient() {
   const client = await pool.connect();
   return client;
 }
 
-// cerrar conexion
 export async function closePool() {
   await pool.end();
 }

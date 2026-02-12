@@ -1,10 +1,6 @@
-// ReportTable - Coffee Theme, Flat Design
-// Datos genéricos via props, nunca hardcodeados
-
 interface Column<T> {
     key: keyof T;
     header: string;
-    // Render personalizado para formateo (moneda, fechas, etc.)
     render?: (value: T[keyof T], row: T) => React.ReactNode;
 }
 
@@ -28,11 +24,9 @@ export default function ReportTable<T extends Record<string, unknown>>({
     }
 
     return (
-        // Tabla con bordes beige, sin sombras - Flat Design
         <div className="bg-white border border-[#E5DCC5] overflow-hidden">
             <div className="overflow-x-auto">
                 <table className="w-full">
-                    {/* Header - Marrón medio con texto blanco */}
                     <thead className="bg-[#8D6E63]">
                         <tr>
                             {columns.map((col) => (
@@ -45,12 +39,10 @@ export default function ReportTable<T extends Record<string, unknown>>({
                             ))}
                         </tr>
                     </thead>
-                    {/* Body - Zebra striping con crema tenue */}
                     <tbody>
                         {data.map((row, rowIndex) => (
                             <tr
                                 key={rowIndex}
-                                // Fila par: blanco, Fila impar: crema tenue
                                 className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-[#FAF7F2]'}
                             >
                                 {columns.map((col) => (

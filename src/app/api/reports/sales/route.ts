@@ -1,31 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { getSalesDaily } from '@/lib/data';
 
-// API Route para obtener ventas diarias con filtro de fechas
+const salesQuerySchema = z.object({
+    from: z.string().refine((val) => !isNaN(new Date(val).getTime()), { message: 'Fecha "from" invalida' }),
+    to: z.string().refine((val) => !isNaN(new Date(val).getTime()), { message: 'Fecha "to" invalida' }),
+});
+
 export async function GET(request: NextRequest) {
     try {
         const searchParams = request.nextUrl.searchParams;
-        const fromParam = searchParams.get('from');
-        const toParam = searchParams.get('to');
+        const parsed = salesQuerySchema.safeParse({
+            from: searchParams.get('from'),
+            to: searchParams.get('to'),
+        });
 
-        // Validar parámetros
-        if (!fromParam || !toParam) {
+        if (!parsed.success) {
             return NextResponse.json(
-                { error: 'Se requieren los parámetros from y to' },
+                { error: parsed.error.issues.map(i => i.message).join(', ') },
                 { status: 400 }
             );
         }
 
-        const from = new Date(fromParam);
-        const to = new Date(toParam);
-
-        // Validar fechas
-        if (isNaN(from.getTime()) || isNaN(to.getTime())) {
-            return NextResponse.json(
-                { error: 'Fechas inválidas' },
-                { status: 400 }
-            );
-        }
+        const from = new Date(parsed.data.from);
+        const to = new Date(parsed.data.to);
 
         const data = await getSalesDaily(from, to);
         return NextResponse.json(data);

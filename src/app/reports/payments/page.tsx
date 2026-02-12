@@ -1,16 +1,13 @@
-// Métodos de Pago - Server Component con datos reales de BD
-// REQUERIDO POR RÚBRICA DEL EXAMEN
-// REGLA: Datos de lib/data.ts, CERO hardcode
+'use client';
 
+import { useState, useEffect } from 'react';
 import ReportTable from '@/components/ui/ReportTable';
-import { getPaymentMix } from '@/lib/data';
 import type { PaymentMix } from '@/lib/definitions';
 
-// Columnas de la tabla
 const columns = [
     {
         key: 'method' as keyof PaymentMix,
-        header: 'Método de Pago'
+        header: 'Metodo de Pago'
     },
     {
         key: 'total_payments' as keyof PaymentMix,
@@ -35,28 +32,48 @@ const columns = [
     },
 ];
 
-export default async function PaymentsReportPage() {
-    // Obtener datos REALES de BD
-    let data: PaymentMix[];
-    let totalAmount = 0;
+export default function PaymentsReportPage() {
+    const [data, setData] = useState<PaymentMix[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    try {
-        data = await getPaymentMix();
-        totalAmount = data.reduce((sum, item) => sum + Number(item.total_amount || 0), 0);
-    } catch (error) {
-        console.error('Error conectando a BD:', error);
-        data = [];
-    }
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch('/api/reports/payments');
+                if (!response.ok) {
+                    throw new Error('Error al obtener datos');
+                }
+                const result = await response.json();
+                setData(result);
+                setError(null);
+            } catch (err) {
+                console.error('Error:', err);
+                setError('No se pudieron cargar los datos de pagos.');
+                setData([]);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    const totalAmount = data.reduce((sum, item) => sum + Number(item.total_amount || 0), 0);
 
     return (
         <div>
-            {/* Header */}
             <div className="mb-8">
-                <h1 className="text-2xl font-bold text-[#3E2723]">Métodos de Pago</h1>
-                <p className="text-[#8D6E63] mt-1">Distribución de pagos por método</p>
+                <h1 className="text-2xl font-bold text-[#3E2723]">Metodos de Pago</h1>
+                <p className="text-[#8D6E63] mt-1">Distribucion de pagos por metodo</p>
             </div>
 
-            {/* Resumen */}
+            {error && (
+                <div className="bg-[#FAF7F2] border border-[#E5DCC5] text-[#3E2723] px-4 py-3 mb-6">
+                    {error}
+                </div>
+            )}
+
             <div className="bg-white border border-[#E5DCC5] p-6 mb-6">
                 <div className="flex items-center gap-8">
                     <div>
@@ -69,18 +86,25 @@ export default async function PaymentsReportPage() {
                         </p>
                     </div>
                     <div className="border-l border-[#E5DCC5] pl-8">
-                        <p className="text-sm text-[#8D6E63]">Métodos Utilizados</p>
-                        <p className="text-3xl font-bold text-[#3E2723]">{data.length}</p>
+                        <p className="text-sm text-[#8D6E63]">Metodos Utilizados</p>
+                        <p className="text-3xl font-bold text-[#3E2723]">
+                            {loading ? '...' : data.length}
+                        </p>
                     </div>
                 </div>
             </div>
 
-            {/* Tabla de métodos de pago - datos de BD */}
-            <ReportTable
-                columns={columns}
-                data={data as unknown as Record<string, unknown>[]}
-                emptyMessage="No hay datos de pagos disponibles"
-            />
+            {!loading && (
+                <ReportTable
+                    columns={columns}
+                    data={data as unknown as Record<string, unknown>[]}
+                    emptyMessage="No hay datos de pagos disponibles"
+                />
+            )}
+
+            {loading && (
+                <div className="p-8 text-center text-[#8D6E63]">Cargando...</div>
+            )}
         </div>
     );
 }

@@ -1,6 +1,3 @@
-// tipos para los datos que vienen de la base de datos
-
-// ventas diarias
 export interface SalesDaily {
     sale_date: Date;
     total_orders: number;
@@ -10,7 +7,6 @@ export interface SalesDaily {
     channel: string;
 }
 
-// productos mas vendidos
 export interface TopProduct {
     product_id: number;
     product_name: string;
@@ -21,7 +17,6 @@ export interface TopProduct {
     order_count: number;
 }
 
-// riesgo de inventario
 export interface InventoryRisk {
     product_id: number;
     product_name: string;
@@ -32,7 +27,6 @@ export interface InventoryRisk {
     total_sold_last_30_days: number;
 }
 
-// valor de clientes
 export interface CustomerValue {
     customer_id: number;
     customer_name: string;
@@ -44,7 +38,6 @@ export interface CustomerValue {
     last_order: Date | null;
 }
 
-// ventas por canal
 export interface SalesChannel {
     channel: string;
     total_orders: number;
@@ -54,7 +47,6 @@ export interface SalesChannel {
     total_items: number;
 }
 
-// metodos de pago
 export interface PaymentMix {
     method: string;
     total_payments: number;
@@ -62,7 +54,6 @@ export interface PaymentMix {
     percentage: number;
 }
 
-// para paginacion
 export interface PaginatedResult<T> {
     data: T[];
     total: number;
@@ -71,7 +62,6 @@ export interface PaginatedResult<T> {
     totalPages: number;
 }
 
-// filtros
 export interface DateRangeFilter {
     from: Date;
     to: Date;

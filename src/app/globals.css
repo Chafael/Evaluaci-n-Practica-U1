@@ -1,19 +1,13 @@
 @import "tailwindcss";
 
-/* ========================================
-   CampusCafe - Coffee Theme (Flat Design)
-   Paleta de colores temática de cafetería
-   ======================================== */
-
 :root {
-  /* Colores principales - Coffee Theme */
-  --coffee-cream: #FDFBF7;        /* Fondo principal - espuma de leche */
-  --coffee-dark-roast: #2C1810;   /* Sidebar - café tostado oscuro */
-  --coffee-medium-roast: #4E342E; /* Sidebar active - café medio */
-  --coffee-accent: #8D6E63;       /* Textos secundarios - marrón medio */
-  --coffee-border: #E5DCC5;       /* Bordes - beige suave */
-  --coffee-text: #3E2723;         /* Texto principal - marrón oscuro */
-  --coffee-zebra: #FAF7F2;        /* Filas alternas - crema tenue */
+  --coffee-cream: #FDFBF7;
+  --coffee-dark-roast: #2C1810;
+  --coffee-medium-roast: #4E342E;
+  --coffee-accent: #8D6E63;
+  --coffee-border: #E5DCC5;
+  --coffee-text: #3E2723;
+  --coffee-zebra: #FAF7F2;
   
   --background: var(--coffee-cream);
   --foreground: var(--coffee-text);
@@ -25,14 +19,12 @@
   --font-sans: var(--font-inter);
 }
 
-/* Sin modo oscuro - tema consistente */
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Scrollbar estilizada para el tema café */
 ::-webkit-scrollbar {
   width: 8px;
 }

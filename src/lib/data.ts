@@ -63,22 +63,22 @@ export async function getTopProducts(
             const searchPattern = `%${search}%`;
             sql = `
                 SELECT product_id, product_name, category_name, unit_price, total_sold, total_revenue, order_count
-                FROM vw_top_products
+                FROM vw_top_products_ranked
                 WHERE product_name ILIKE $1 OR category_name ILIKE $1
                 ORDER BY total_sold DESC NULLS LAST
                 LIMIT $2 OFFSET $3
             `;
-            countSql = `SELECT COUNT(*) as count FROM vw_top_products WHERE product_name ILIKE $1 OR category_name ILIKE $1`;
+            countSql = `SELECT COUNT(*) as count FROM vw_top_products_ranked WHERE product_name ILIKE $1 OR category_name ILIKE $1`;
             params = [searchPattern, pagination.limit, offset];
             countParams = [searchPattern];
         } else {
             sql = `
                 SELECT product_id, product_name, category_name, unit_price, total_sold, total_revenue, order_count
-                FROM vw_top_products
+                FROM vw_top_products_ranked
                 ORDER BY total_sold DESC NULLS LAST
                 LIMIT $1 OFFSET $2
             `;
-            countSql = `SELECT COUNT(*) as count FROM vw_top_products`;
+            countSql = `SELECT COUNT(*) as count FROM vw_top_products_ranked`;
             params = [pagination.limit, offset];
             countParams = [];
         }

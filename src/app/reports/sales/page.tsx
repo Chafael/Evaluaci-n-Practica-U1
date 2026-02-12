@@ -4,7 +4,6 @@ import { useState } from 'react';
 import ReportTable from '@/components/ui/ReportTable';
 import type { SalesDaily } from '@/lib/definitions';
 
-// Columnas de la tabla - formateo personalizado
 const columns = [
     {
         key: 'sale_date' as keyof SalesDaily,
@@ -24,7 +23,7 @@ const columns = [
     },
     {
         key: 'total_orders' as keyof SalesDaily,
-        header: 'Órdenes'
+        header: 'Ordenes'
     },
     {
         key: 'unique_customers' as keyof SalesDaily,
@@ -47,7 +46,6 @@ const columns = [
 ];
 
 export default function SalesReportPage() {
-    // Estado para filtros de fecha
     const [fromDate, setFromDate] = useState(() => {
         const date = new Date();
         date.setDate(date.getDate() - 30);
@@ -57,13 +55,11 @@ export default function SalesReportPage() {
         return new Date().toISOString().split('T')[0];
     });
 
-    // Estado para datos y loading
     const [data, setData] = useState<SalesDaily[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [hasSearched, setHasSearched] = useState(false);
 
-    // Función para buscar datos - llama a API que usa lib/data.ts
     const handleSearch = async () => {
         setLoading(true);
         setError(null);
@@ -78,7 +74,7 @@ export default function SalesReportPage() {
             setData(result);
         } catch (err) {
             console.error('Error:', err);
-            setError('No se pudieron cargar los datos. Verifica que la base de datos esté conectada.');
+            setError('No se pudieron cargar los datos. Verifica que la base de datos este conectada.');
             setData([]);
         } finally {
             setLoading(false);
@@ -87,13 +83,11 @@ export default function SalesReportPage() {
 
     return (
         <div>
-            {/* Header - Colores café */}
             <div className="mb-8">
                 <h1 className="text-2xl font-bold text-[#3E2723]">Ventas Diarias</h1>
                 <p className="text-[#8D6E63] mt-1">Reporte de ventas filtrado por fecha</p>
             </div>
 
-            {/* Filtros - Tema café */}
             <div className="bg-white border border-[#E5DCC5] p-6 mb-6">
                 <div className="flex flex-wrap items-end gap-4">
                     <div>
@@ -130,14 +124,12 @@ export default function SalesReportPage() {
                 </div>
             </div>
 
-            {/* Error */}
             {error && (
                 <div className="bg-[#FAF7F2] border border-[#E5DCC5] text-[#3E2723] px-4 py-3 mb-6">
                     {error}
                 </div>
             )}
 
-            {/* Tabla de resultados - datos de BD */}
             {hasSearched && !loading && (
                 <ReportTable
                     columns={columns}
@@ -146,7 +138,6 @@ export default function SalesReportPage() {
                 />
             )}
 
-            {/* Estado inicial */}
             {!hasSearched && !loading && (
                 <div className="bg-white border border-[#E5DCC5] p-8 text-center">
                     <p className="text-[#8D6E63]">
